@@ -97,7 +97,7 @@ const LoginDialog = ({ open, onClose, onLogin, onRegister, showSnackbar }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-300 bg-opacity-20" />
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-20" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
