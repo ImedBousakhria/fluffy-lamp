@@ -169,10 +169,10 @@ const productsSlice = createSlice({
       })
       // Modify Product
       .addCase(modifyProduct.fulfilled, (state, action) => {
-        const { id, productData } = action.payload;
+        const { id, data } = action.payload; // data is the updated product
         const index = state.products.findIndex((p) => p._id === id);
         if (index !== -1) {
-          state.products[index] = { ...state.products[index], ...productData };
+          state.products[index] = { ...state.products[index], ...data };
         }
       })
       .addCase(modifyProduct.rejected, (state, action) => {
