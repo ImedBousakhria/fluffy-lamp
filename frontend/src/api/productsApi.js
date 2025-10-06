@@ -1,4 +1,4 @@
-const API_URL = "https://test-tech-qfks.onrender.com/api/products";
+const API_URL = "https://fluffy-lamp.onrender.com/api/products";
 
 // Get auth token from localStorage
 const getAuthToken = () => localStorage.getItem("token");
