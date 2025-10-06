@@ -46,14 +46,13 @@ const ProductsPage = () => {
   // Local state
   const [filterAvailable, setFilter] = useState(null);
   
-  // Custom hooks
+  // My hooks
   const { snackbar, showSnackbar, hideSnackbar } = useSnackbar();
   const { dialogOpen, editingProduct, openCreateDialog, openEditDialog, closeDialog } = useProductDialog();
   
-  // WebSocket connection (bonus)
+  // WebSocket connection 
   useWebSocket('ws://localhost:5000');
 
-  // Fetch products on mount
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
