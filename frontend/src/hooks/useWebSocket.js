@@ -10,7 +10,7 @@ import {
  * Custom hook for WebSocket connection
  * @param {string} url - WebSocket server URL
  */
-const useWebSocket = (url = 'wss://fluffy-lamp.onrender.com') => {
+const useWebSocket = (url = 'ws://localhost:5000') => {
   const dispatch = useDispatch();
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
