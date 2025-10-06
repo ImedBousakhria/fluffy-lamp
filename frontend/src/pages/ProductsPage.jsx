@@ -55,7 +55,7 @@ const ProductsPage = () => {
   const { user, isAuthenticated, loading: authLoading, login, logout } = useAuth();
   
   // WebSocket connection (bonus) - only connect if authenticated
-  useWebSocket(isAuthenticated ? 'ws://localhost:5000' : null);
+  useWebSocket(isAuthenticated ? 'wss://fluffy-lamp.onrender.com' : null);
 
   // Fetch products when authenticated
   useEffect(() => {

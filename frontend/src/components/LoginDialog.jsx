@@ -22,7 +22,7 @@ const LoginDialog = ({ open, onClose, onLogin, onRegister, showSnackbar }) => {
     try {
       if (isLogin) {
         // Login
-        const response = await fetch('http://localhost:5000/api/auth/login', {
+        const response = await fetch('https://fluffy-lamp.onrender.com/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -49,7 +49,7 @@ const LoginDialog = ({ open, onClose, onLogin, onRegister, showSnackbar }) => {
         }
       } else {
         // Register
-        const response = await fetch('http://localhost:5000/api/auth/register', {
+        const response = await fetch('https://fluffy-lamp.onrender.com/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
