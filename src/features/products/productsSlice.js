@@ -1,21 +1,52 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as productsApi from '../../api/productsApi';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import * as productsApi from "../../api/productsApi";
 
-// Dummy data for development
+// dummy data just for early testing
 const DUMMY_PRODUCTS = [
-  { _id: 1, name: "AC1 Phone1", type: "phone", price: 200.05, rating: 3.8, warranty_years: 1, available: true },
-  { _id: 2, name: "AC2 Phone2", type: "phone", price: 147.21, rating: 1, warranty_years: 3, available: false },
-  { _id: 3, name: "AC3 Phone3", type: "phone", price: 150, rating: 2, warranty_years: 1, available: true },
-  { _id: 4, name: "AC4 Phone4", type: "phone", price: 50.20, rating: 3, warranty_years: 2, available: true }
+  {
+    _id: 1,
+    name: "AC1 Phone1",
+    type: "phone",
+    price: 200.05,
+    rating: 3.8,
+    warranty_years: 1,
+    available: true,
+  },
+  {
+    _id: 2,
+    name: "AC2 Phone2",
+    type: "phone",
+    price: 147.21,
+    rating: 1,
+    warranty_years: 3,
+    available: false,
+  },
+  {
+    _id: 3,
+    name: "AC3 Phone3",
+    type: "phone",
+    price: 150,
+    rating: 2,
+    warranty_years: 1,
+    available: true,
+  },
+  {
+    _id: 4,
+    name: "AC4 Phone4",
+    type: "phone",
+    price: 50.2,
+    rating: 3,
+    warranty_years: 2,
+    available: true,
+  },
 ];
 
-// Async thunks for API calls
 export const getProducts = createAsyncThunk(
-  'products/getProducts',
+  "products/getProducts",
   async (_, { rejectWithValue }) => {
     try {
       const data = await productsApi.fetchProducts();
-      // return DUMMY_PRODUCTS; // using dummy data for now
+      console.log("Fetched products:", data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -24,14 +55,11 @@ export const getProducts = createAsyncThunk(
 );
 
 export const addProduct = createAsyncThunk(
-  'products/addProduct',
+  "products/addProduct",
   async (productData, { rejectWithValue }) => {
     try {
-      const productData = await productsApi.createProduct(productData);
-      const newProduct = { 
-        ...productData      
-      };
-      return newProduct;
+      const createdData = await productsApi.createProduct(productData);
+      return createdData;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -39,7 +67,7 @@ export const addProduct = createAsyncThunk(
 );
 
 export const modifyProduct = createAsyncThunk(
-  'products/modifyProduct',
+  "products/modifyProduct",
   async ({ id, productData }, { rejectWithValue }) => {
     try {
       const data = await productsApi.updateProduct(id, productData);
@@ -51,7 +79,7 @@ export const modifyProduct = createAsyncThunk(
 );
 
 export const removeProduct = createAsyncThunk(
-  'products/removeProduct',
+  "products/removeProduct",
   async (id, { rejectWithValue }) => {
     try {
       productsApi.deleteProduct(id);
@@ -62,18 +90,17 @@ export const removeProduct = createAsyncThunk(
   }
 );
 
-// Initial state
 const initialState = {
   products: [],
   loading: false,
   error: null,
-  searchQuery: '',
-  filterAvailable: null // null = all, true = available only, false = unavailable only
+  searchQuery: "",
+  filterAvailable: null, // null = all, true = available only, false = unavailable only
 };
 
 // Slice
 const productsSlice = createSlice({
-  name: 'products',
+  name: "products",
   initialState,
   reducers: {
     setSearchQuery: (state, action) => {
@@ -87,17 +114,25 @@ const productsSlice = createSlice({
     },
     // For WebSocket updates
     updateProductFromSocket: (state, action) => {
-      const index = state.products.findIndex(p => p._id === action.payload._id);
+      const index = state.products.findIndex(
+        (p) => p._id === action.payload._id
+      );
       if (index !== -1) {
         state.products[index] = action.payload;
       }
     },
     addProductFromSocket: (state, action) => {
-      state.products.push(action.payload);
+      const exists = state.products.find((p) => p._id === action.payload._id);
+      if (!exists) {
+        state.products.unshift(action.payload);
+      }
+      state.products.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
     },
     removeProductFromSocket: (state, action) => {
-      state.products = state.products.filter(p => p._id !== action.payload);
-    }
+      state.products = state.products.filter((p) => p._id !== action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -120,8 +155,14 @@ const productsSlice = createSlice({
       })
       .addCase(addProduct.fulfilled, (state, action) => {
         state.loading = false;
-        state.products.push(action.payload);
+        const exists = state.products.find((p) => p._id === action.payload._id);
+        if (!exists) state.products.unshift(action.payload);
+        // state.products.push(action.payload);
+        state.products.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
       })
+
       .addCase(addProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -129,7 +170,7 @@ const productsSlice = createSlice({
       // Modify Product
       .addCase(modifyProduct.fulfilled, (state, action) => {
         const { id, productData } = action.payload;
-        const index = state.products.findIndex(p => p._id === id);
+        const index = state.products.findIndex((p) => p._id === id);
         if (index !== -1) {
           state.products[index] = { ...state.products[index], ...productData };
         }
@@ -139,12 +180,12 @@ const productsSlice = createSlice({
       })
       // Remove Product
       .addCase(removeProduct.fulfilled, (state, action) => {
-        state.products = state.products.filter(p => p._id !== action.payload);
+        state.products = state.products.filter((p) => p._id !== action.payload);
       })
       .addCase(removeProduct.rejected, (state, action) => {
         state.error = action.payload;
       });
-  }
+  },
 });
 
 // Selectors
@@ -156,21 +197,24 @@ export const selectSearchQuery = (state) => state.products.searchQuery;
 // Filtered products selector
 export const selectFilteredProducts = (state) => {
   const { products, searchQuery, filterAvailable } = state.products;
-  
-  return products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = filterAvailable === null || product.available === filterAvailable;
+
+  return products.filter((product) => {
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesFilter =
+      filterAvailable === null || product.available === filterAvailable;
     return matchesSearch && matchesFilter;
   });
 };
 
-export const { 
-  setSearchQuery, 
-  setFilterAvailable, 
+export const {
+  setSearchQuery,
+  setFilterAvailable,
   clearError,
   updateProductFromSocket,
   addProductFromSocket,
-  removeProductFromSocket
+  removeProductFromSocket,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;
