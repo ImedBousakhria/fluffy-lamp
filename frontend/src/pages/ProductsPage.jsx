@@ -10,7 +10,7 @@ import ProductDialog from '../components/ProductDialog';
 import LoginDialog from '../components/LoginDialog';
 import LoadingState from '../components/LoadingState';
 import ErrorAlert from '../components/ErrorAlert';
-import NotificationSnackbar from '../components/NotificationSnackbar';
+import NotificationSnackbar from '../components/NotificationSnackBar';
 
 // Redux
 import {
