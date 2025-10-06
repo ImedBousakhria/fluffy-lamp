@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PlusIcon } from '@heroicons/react/24/outline';
 
 // Components
-import Navbar from '../components/Navbar';
+import Navbar from '../components/NavBar';
 import SearchBar from '../components/SearchBar';
 import ProductsGrid from '../components/ProductsGrid';
 import ProductDialog from '../components/ProductDialog';
