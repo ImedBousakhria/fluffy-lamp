@@ -1,9 +1,9 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const http = require('http');
-const connectDB = require('./config/db');
-const { initWebSocket } = require('./websocket/productSocket');
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const http = require("http");
+const connectDB = require("./config/db");
+const { initWebSocket } = require("./websocket/productSocket");
 
 // load env vars
 dotenv.config();
@@ -13,7 +13,13 @@ connectDB();
 const app = express();
 
 // load middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "*", // allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -28,18 +34,18 @@ app.use((req, res, next) => {
 });
 
 // actual routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/products', require('./routes/product'));
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/products", require("./routes/product"));
 
 // Health check
-app.get('/', (req, res) => {
-  res.json({ message: 'Product Manager API is running!' });
+app.get("/", (req, res) => {
+  res.json({ message: "Product Manager API is running!" });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  res.status(500).json({ message: "Something went wrong!" });
 });
 
 // Start server
