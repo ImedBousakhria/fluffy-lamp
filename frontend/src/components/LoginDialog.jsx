@@ -87,7 +87,7 @@ const LoginDialog = ({ open, onClose, onLogin, onRegister, showSnackbar }) => {
 
   return (
     <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
+      <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -97,7 +97,7 @@ const LoginDialog = ({ open, onClose, onLogin, onRegister, showSnackbar }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-40" />
+          <div className="fixed inset-0 bg-gray-300 bg-opacity-20" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
