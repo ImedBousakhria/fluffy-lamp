@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import ProductsPage from './pages/ProductsPage';
 
+// dummy data for testing before backend is ready
 const DUMMY_PRODUCTS = [
   { _id: 1, name: "AC1 Phone1", type: "phone", price: 200.05, rating: 3.8, warranty_years: 1, available: true },
   { _id: 2, name: "AC2 Phone2", type: "phone", price: 147.21, rating: 1, warranty_years: 3, available: false },
@@ -8,6 +12,11 @@ const DUMMY_PRODUCTS = [
 ];
 
 function App() {
+   return (
+    <Provider store={store}>
+      <ProductsPage />
+    </Provider>
+  );
 }
 
 export default App;
